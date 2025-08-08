@@ -5,13 +5,20 @@
   "description": "A Blog Aggregator. A Boot.dev project.",
   "main": "index.js",
   "scripts": {
-    "start": "tsx ./src/index.ts"
+    "start": "tsx ./src/index.ts",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
   },
   "author": "Vladimir Rujević <vladimir.rujevic@live.com>",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.2.0",
+    "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.4",
+    "postgres": "^3.4.7"
   }
 }
