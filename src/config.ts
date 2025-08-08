@@ -1,8 +1,9 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
+import type {Config} from "./types/config";
 
-const getConfigFilePath = ():string => {
+const getConfigFilePath = (): string => {
     return path.join(os.homedir(), ".gatorconfig.json");
 }
 
@@ -44,8 +45,3 @@ export function setUser(userName: string) {
     config.currentUserName = userName;
     writeConfig(config);
 }
-
-export type Config = {
-    dbUrl: string;
-    currentUserName: string;
-};
