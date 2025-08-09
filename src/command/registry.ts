@@ -16,5 +16,6 @@ export function printAvailableCommands() {
     console.error("Usage:")
     console.error("  gator register <user_name>");
     console.error("  gator login <user_name>");
+    console.error("  gator reset");
     console.error();
 }
