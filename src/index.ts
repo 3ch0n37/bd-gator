@@ -4,12 +4,14 @@ import {command_login} from "./command/command_login";
 import * as process from "node:process";
 import {command_register} from "./command/command_register";
 import {command_reset} from "./command/command_reset";
+import {command_users} from "./command/command_users";
 
 async function main() {
     const commandsRegistry: CommandsRegistry = {};
     registerCommand(commandsRegistry, 'login', command_login);
     registerCommand(commandsRegistry, 'register', command_register);
     registerCommand(commandsRegistry, 'reset', command_reset);
+    registerCommand(commandsRegistry, 'users', command_users);
 
     const args = process.argv.slice(2);
     if (args.length === 0) {
