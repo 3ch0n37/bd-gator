@@ -1,12 +1,13 @@
-import { readConfig, setUser } from "./config";
 import {printAvailableCommands, registerCommand, runCommand} from "./command/registry";
 import {CommandsRegistry} from "./types/command_handler";
 import {command_login} from "./command/command_login";
 import * as process from "node:process";
+import {command_register} from "./command/command_register";
 
-function main() {
+async function main() {
     const commandsRegistry: CommandsRegistry = {};
     registerCommand(commandsRegistry, 'login', command_login);
+    registerCommand(commandsRegistry, 'register', command_register);
 
     const args = process.argv.slice(2);
     if (args.length === 0) {
@@ -22,11 +23,12 @@ function main() {
         process.exit(1);
     }
     try {
-        runCommand(commandsRegistry, commandName, ...args);
-    }  catch (e) {
-       console.error((e as Error).message);
-       process.exit(1)
+        await runCommand(commandsRegistry, commandName, ...args);
+    } catch (e) {
+        console.error((e as Error).message);
+        process.exit(1)
     }
+    process.exit(0);
 }
 
 main();
