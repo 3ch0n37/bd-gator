@@ -5,6 +5,7 @@ import * as process from "node:process";
 import {command_register} from "./command/command_register";
 import {command_reset} from "./command/command_reset";
 import {command_users} from "./command/command_users";
+import {command_agg} from "./command/command_agg";
 
 async function main() {
     const commandsRegistry: CommandsRegistry = {};
@@ -12,6 +13,7 @@ async function main() {
     registerCommand(commandsRegistry, 'register', command_register);
     registerCommand(commandsRegistry, 'reset', command_reset);
     registerCommand(commandsRegistry, 'users', command_users);
+    registerCommand(commandsRegistry, 'agg', command_agg);
 
     const args = process.argv.slice(2);
     if (args.length === 0) {
