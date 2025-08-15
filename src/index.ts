@@ -8,6 +8,7 @@ import {command_users} from "./command/command_users";
 import {command_agg} from "./command/command_agg";
 import {command_addFeed} from "./command/command_addfeed";
 import {command_feeds} from "./command/command_feeds";
+import {command_follow, command_following} from "./command/command_feed_follows";
 
 async function main() {
     const commandsRegistry: CommandsRegistry = {};
@@ -17,7 +18,9 @@ async function main() {
     registerCommand(commandsRegistry, 'users', command_users);
     registerCommand(commandsRegistry, 'agg', command_agg);
     registerCommand(commandsRegistry, 'addfeed', command_addFeed);
-    registerCommand(commandsRegistry, 'feeds', command_feeds)
+    registerCommand(commandsRegistry, 'feeds', command_feeds);
+    registerCommand(commandsRegistry, 'follow', command_follow);
+    registerCommand(commandsRegistry, 'following', command_following);
 
     const args = process.argv.slice(2);
     if (args.length === 0) {

@@ -2,7 +2,6 @@ import {getAllFeeds} from "../lib/db/queries/feeds";
 import {getUserById} from "../lib/db/queries/users";
 import type {FeedRecord, UserRecord} from "../lib/db/schema";
 
-// export async function command_addFeed(cmdName: string, ...args: string[]) {
 export async function command_feeds(_: string) {
     const allFeeds: FeedRecord[] = await getAllFeeds();
     const userMap = new Map<string, UserRecord>();

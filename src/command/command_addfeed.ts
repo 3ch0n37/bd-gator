@@ -2,6 +2,7 @@ import {addFeed, getFeedByUrl} from "../lib/db/queries/feeds";
 import {getUserByName} from "../lib/db/queries/users";
 import {readConfig} from "../config";
 import type {FeedRecord, UserRecord} from "../lib/db/schema";
+import {createFeedFollow} from "../lib/db/queries/feed_follow";
 
 function printFeed(feed: FeedRecord, user: UserRecord) {
     console.log(`* ${feed.name} (${feed.url})`);
@@ -28,6 +29,8 @@ export async function command_addFeed(cmdName: string, ...args: string[]) {
         throw new Error(`Feed with URL ${feedUrl} already added`);
     }
     const newFeed = await addFeed(feedName, feedUrl, user.id);
+    const newFeedFollow = await createFeedFollow(user.id, newFeed.id);
     console.log(`Successfully added feed:.`);
     printFeed(newFeed, user);
+    console.log(`User ${user.name} now follows feed ${newFeed.name}.`);
 }
