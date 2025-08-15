@@ -1,6 +1,4 @@
 import {addFeed, getFeedByUrl} from "../lib/db/queries/feeds";
-import {getUserByName} from "../lib/db/queries/users";
-import {readConfig} from "../config";
 import type {FeedRecord, UserRecord} from "../lib/db/schema";
 import {createFeedFollow} from "../lib/db/queries/feed_follow";
 
@@ -9,7 +7,7 @@ function printFeed(feed: FeedRecord, user: UserRecord) {
     console.log(`\tAdded by ${user.name}`);
 }
 
-export async function command_addFeed(cmdName: string, ...args: string[]) {
+export async function command_addFeed(cmdName: string, user: UserRecord, ...args: string[]) {
     if (args.length < 2) {
         throw new Error("Name and URL are required");
     }
@@ -19,11 +17,6 @@ export async function command_addFeed(cmdName: string, ...args: string[]) {
     const feedName = args[0];
     const feedUrl = args[1];
     console.log(`Adding feed "${feedName}" with URL "${feedUrl}"`);
-    const currentUserName = readConfig().currentUserName;
-    const user = await getUserByName(currentUserName);
-    if (!user) {
-        throw new Error("Invalid user");
-    }
     const existingFeed = await getFeedByUrl(feedUrl);
     if (existingFeed) {
         throw new Error(`Feed with URL ${feedUrl} already added`);
@@ -32,5 +25,5 @@ export async function command_addFeed(cmdName: string, ...args: string[]) {
     const newFeedFollow = await createFeedFollow(user.id, newFeed.id);
     console.log(`Successfully added feed:.`);
     printFeed(newFeed, user);
-    console.log(`User ${user.name} now follows feed ${newFeed.name}.`);
+    console.log(`User ${newFeedFollow.userName} now follows feed ${newFeedFollow.feedName}.`);
 }
