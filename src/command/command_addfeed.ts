@@ -1,4 +1,4 @@
-import {addFeed, getFeedByUrlAndUser} from "../lib/db/queries/feeds";
+import {addFeed, getFeedByUrl} from "../lib/db/queries/feeds";
 import {getUserByName} from "../lib/db/queries/users";
 import {readConfig} from "../config";
 import type {FeedRecord, UserRecord} from "../lib/db/schema";
@@ -23,9 +23,9 @@ export async function command_addFeed(cmdName: string, ...args: string[]) {
     if (!user) {
         throw new Error("Invalid user");
     }
-    const existingFeed = await getFeedByUrlAndUser(feedUrl, user.id);
+    const existingFeed = await getFeedByUrl(feedUrl);
     if (existingFeed) {
-        throw new Error("Feed already added");
+        throw new Error(`Feed with URL ${feedUrl} already added`);
     }
     const newFeed = await addFeed(feedName, feedUrl, user.id);
     console.log(`Successfully added feed:.`);

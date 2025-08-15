@@ -1,9 +1,9 @@
 import {db} from "..";
 import {feeds} from "../schema";
-import {and, eq} from "drizzle-orm";
+import {eq} from "drizzle-orm";
 
-export async function getFeedByUrlAndUser(url: string, userId: string) {
-    const [result] = await db.select().from(feeds).where(and(eq(feeds.url, url), eq(feeds.userId, userId)));
+export async function getFeedByUrl(url: string) {
+    const [result] = await db.select().from(feeds).where(eq(feeds.url, url));
     return result;
 }
 
