@@ -17,5 +17,7 @@ export function printAvailableCommands() {
     console.error("  gator register <user_name>");
     console.error("  gator login <user_name>");
     console.error("  gator reset");
+    console.error("  gator agg");
+    console.error("  gator addfeed <feed_name> <feed_url>");
     console.error();
 }
