@@ -12,6 +12,10 @@ export async function addFeed(name: string, url: string, userId: string) {
     return result;
 }
 
+export async function getAllFeeds() {
+    return db.select().from(feeds);
+}
+
 export async function deleteAllFeeds() {
     await db.delete(feeds);
 }
