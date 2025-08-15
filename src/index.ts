@@ -8,7 +8,7 @@ import {command_users} from "./command/command_users";
 import {command_agg} from "./command/command_agg";
 import {command_addFeed} from "./command/command_addfeed";
 import {command_feeds} from "./command/command_feeds";
-import {command_follow, command_following} from "./command/command_feed_follows";
+import {command_follow, command_following, command_unfollow} from "./command/command_feed_follows";
 import {middlewareLoggedIn} from "./middleware";
 
 async function main() {
@@ -41,6 +41,11 @@ async function main() {
         'following',
         middlewareLoggedIn(command_following)
     );
+    registerCommand(
+        commandsRegistry,
+        'unfollow',
+        middlewareLoggedIn(command_unfollow)
+    )
 
     const args = process.argv.slice(2);
     if (args.length === 0) {
