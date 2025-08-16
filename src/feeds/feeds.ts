@@ -1,7 +1,8 @@
 import {XMLParser} from "fast-xml-parser";
-import type {Feed} from "../types/feed";
+import type {Feed, FeedItem} from "../types/feed";
 import {getNextFeedToFetch, markFeedFetched} from "../lib/db/queries/feeds";
 import {FeedRecord} from "../lib/db/schema";
+import {createPost} from "../lib/db/queries/posts";
 
 async function fetchPosts(feedUrl: string): Promise<Feed> {
     const response = await fetch(feedUrl, {
@@ -51,6 +52,17 @@ async function fetchPosts(feedUrl: string): Promise<Feed> {
     } as Feed;
 }
 
+async function savePosts(posts: FeedItem[], feedId: string) {
+    for (const post of posts) {
+        if(!post.link || !post.title || !post.description || !post.pubDate) {
+            continue;
+        }
+        const publishedAt = new Date(post.pubDate);
+        await createPost(post.title, post.link, post.description, feedId, publishedAt);
+        console.log(`Saved post "${post.title}"`);
+    }
+}
+
 export async function scrapeFeeds() {
     const feed = await getNextFeedToFetch();
     if (!feed) {
@@ -69,6 +81,7 @@ async function scrapeFeed(feed: FeedRecord) {
     console.log(
         `Feed ${feed.name} collected, ${feedData.items.length} posts found`,
     );
+    await savePosts(feedData.items, feed.id);
 }
 
 export function handleError(err: unknown) {
