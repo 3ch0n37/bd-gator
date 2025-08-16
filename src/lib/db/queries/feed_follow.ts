@@ -43,3 +43,7 @@ export async function unfollow(feedId: string, userId: string) {
     )).returning();
     return unfollowed;
 }
+
+export async function deleteAllFeedFollows() {
+    await db.delete(feed_follows);
+}

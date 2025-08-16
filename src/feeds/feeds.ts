@@ -1,7 +1,9 @@
 import {XMLParser} from "fast-xml-parser";
 import type {Feed} from "../types/feed";
+import {markFeedFetched, getNextFeedToFetch} from "../lib/db/queries/feeds";
+import {FeedRecord} from "../lib/db/schema";
 
-export async function fetchfeeds(feedUrl: string): Promise<Feed> {
+async function fetchPosts(feedUrl: string): Promise<Feed> {
     const response = await fetch(feedUrl, {
         headers: {
             "User-Agent": "gator"
@@ -47,4 +49,30 @@ export async function fetchfeeds(feedUrl: string): Promise<Feed> {
         }
     }
     return feed;
+}
+
+export async function scrapeFeeds() {
+    const feed = await getNextFeedToFetch();
+    if (!feed) {
+        console.log(`No feeds to fetch.`);
+        return;
+    }
+    console.log(`Found a feed to fetch!`);
+    await scrapeFeed(feed);
+}
+
+async function scrapeFeed(feed: FeedRecord) {
+    await markFeedFetched(feed.id);
+    console.log(`Fetching feed ${feed.name}...`);
+    const feedData = await fetchPosts(feed.url);
+
+    console.log(
+        `Feed ${feed.name} collected, ${feedData.items.length} posts found`,
+    );
+}
+
+export function handleError(err: unknown) {
+    console.error(
+        `Error scraping feeds: ${err instanceof Error ? err.message : err}`,
+    );
 }
