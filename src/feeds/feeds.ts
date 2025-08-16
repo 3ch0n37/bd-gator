@@ -1,6 +1,6 @@
 import {XMLParser} from "fast-xml-parser";
 import type {Feed} from "../types/feed";
-import {markFeedFetched, getNextFeedToFetch} from "../lib/db/queries/feeds";
+import {getNextFeedToFetch, markFeedFetched} from "../lib/db/queries/feeds";
 import {FeedRecord} from "../lib/db/schema";
 
 async function fetchPosts(feedUrl: string): Promise<Feed> {
@@ -25,22 +25,17 @@ async function fetchPosts(feedUrl: string): Promise<Feed> {
     ) {
         throw new Error("Invalid feed format. Missing required fields.");
     }
-    const feed: Feed = {
-        title: channel.title,
-        link: channel.link,
-        description: channel.description,
-        items: []
-    }
+    const feedItems = [];
     if (channel.item && Array.isArray(channel.item)) {
         for (const item of channel.item) {
             if (!item.title || typeof item.title !== "string"
                 || !item.link || typeof item.link !== "string"
                 || !item.description || typeof item.description !== "string"
-                || !item.pubDate || typeof item.pubDate !== "string"
+                || !item.pubDate
             ) {
-                throw new Error("Invalid feed format. Missing required fields.");
+                continue;
             }
-            feed.items.push({
+            feedItems.push({
                 title: item.title,
                 link: item.link,
                 description: item.description,
@@ -48,7 +43,12 @@ async function fetchPosts(feedUrl: string): Promise<Feed> {
             });
         }
     }
-    return feed;
+    return {
+        title: channel.title,
+        link: channel.link,
+        description: channel.description,
+        items: feedItems,
+    } as Feed;
 }
 
 export async function scrapeFeeds() {
